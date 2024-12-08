@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getUserProfile, selectIsLoggedIn } from "../redux/features/authSlice";
 
 export const useUserProfile = () => {
+
   const dispatch = useDispatch();
   const isLoggedIn = useSelector(selectIsLoggedIn);
   const { user, isLoading } = useSelector((state) => state.auth);
@@ -13,7 +14,7 @@ export const useUserProfile = () => {
       dispatch(getUserProfile());
     }
 
-    if (user) {
+    if (user && user.role) {
       setRole(user.role);
     }
   }, [dispatch, user, isLoading, isLoggedIn]);

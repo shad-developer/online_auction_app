@@ -25,6 +25,7 @@ import {
 import { getMyBidsHistory } from "../../redux/features/biddingSlice";
 
 export const Dashboard = () => {
+  
   const location = useLocation();
   const dispatch = useDispatch();
   const { role, isLoggedIn } = useUserProfile();
@@ -132,13 +133,15 @@ export const Dashboard = () => {
                   <Title>Items Sold</Title>
                 </div>
               </div>
-              <div className="shadow-s3 border border-green bg-green_100 p-8 flex items-center text-center justify-center gap-5 flex-col rounded-xl">
-                <GiBarbedStar size={80} className="text-green" />
-                <div>
-                  <Title level={1}>{userProducts?.length}</Title>
-                  <Title>Your Products </Title>
+              {role !== 'admin' && (
+                <div className="shadow-s3 border border-green bg-green_100 p-8 flex items-center text-center justify-center gap-5 flex-col rounded-xl">
+                  <GiBarbedStar size={80} className="text-green" />
+                  <div>
+                    <Title level={1}>{userProducts?.length}</Title>
+                    <Title>Your Products </Title>
+                  </div>
                 </div>
-              </div>
+              )}
               {role === "admin" && (
                 <>
                   <div className="shadow-s3 border border-green bg-green_100 p-8 flex items-center text-center justify-center gap-5 flex-col rounded-xl">

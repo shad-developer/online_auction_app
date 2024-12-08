@@ -1,10 +1,18 @@
-import React from 'react';
-import { Route, Navigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { selectUser } from '../redux/features/authSlice';
+import React from "react";
+import { Navigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
+export const PrivateRoute = ({ roles, children }) => {
+  const { user } = useSelector((state) => state.auth); 
 
-export const PrivateRoute = ({ children }) => {
-  return <div>{children}</div>;
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+
+  if (user && roles && !roles.includes(user?.role)) {
+    return <Navigate to="/unauthorized" replace />;
+  }
+
+  return children;
 };
-

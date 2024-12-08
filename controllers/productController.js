@@ -5,9 +5,19 @@ const cloudinary = require("cloudinary").v2;
 
 // create new products by seller or admin
 module.exports.createProduct = asyncHandler(async (req, res) => {
-  const { title, description, price, category, length, width, height, weight, color, material } = req.body;
-  
-  
+  const {
+    title,
+    description,
+    price,
+    category,
+    length,
+    width,
+    height,
+    weight,
+    color,
+    material,
+  } = req.body;
+
   const userId = req.user.id;
 
   const originalSlug = slugify(title, {
@@ -23,7 +33,7 @@ module.exports.createProduct = asyncHandler(async (req, res) => {
   }
 
   if (!title || !description || !price) {
-    res.status(400).json({message:"All fields are required"});
+    res.status(400).json({ message: "All fields are required" });
     throw new Error("All fields are required");
   }
 
@@ -38,7 +48,7 @@ module.exports.createProduct = asyncHandler(async (req, res) => {
       });
     } catch (error) {
       console.error("Cloudinary upload error:", error);
-      res.status(500).json({message:"Image Upload Failed"});;
+      res.status(500).json({ message: "Image Upload Failed" });
       throw new Error("Image upload failed");
     }
     fileData = {
@@ -72,7 +82,7 @@ module.exports.getProduct = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const product = await productModel.findById(id).populate("user");
   if (!product) {
-    res.status(404).json({message:"Product not found"});
+    res.status(404).json({ message: "Product not found" });
     throw new Error("Product not found");
   }
   res.json({ success: true, data: product });
@@ -80,10 +90,13 @@ module.exports.getProduct = asyncHandler(async (req, res) => {
 
 // get all products
 module.exports.getAllProduct = asyncHandler(async (req, res) => {
-  const products = await productModel.find({}).sort("-createdAt").populate({
-    path: "user",
-    select: "-password",
-  });
+  const products = await productModel
+    .find({ })
+    .sort("-createdAt")
+    .populate({
+      path: "user",
+      select: "-password",
+    });
   res.json({ success: true, data: products });
 });
 
@@ -111,7 +124,7 @@ module.exports.getWonedProducts = asyncHandler(async (req, res) => {
   const userId = req.user._id;
 
   const products = await productModel
-    .find({ isSoldout: true, soldTo: userId.toString()})
+    .find({ isSoldout: true, soldTo: userId.toString() })
     .sort("-createdAt");
 
   // if (!products || products.length === 0) {
@@ -143,13 +156,13 @@ module.exports.deleteProduct = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const product = await productModel.findById(id);
   if (!product) {
-    res.status(404).json({message:"Product Not Found"});
+    res.status(404).json({ message: "Product Not Found" });
     throw new Error("Product not found");
   }
 
   // Check if the product belongs to the logged-in user
-  if (product.user?.toString() !== req.user.id && req.user.role !== 'admin') {
-    res.status(403).json({message:"Unauthorized to delete this product"});
+  if (product.user?.toString() !== req.user.id && req.user.role !== "admin") {
+    res.status(403).json({ message: "Unauthorized to delete this product" });
     throw new Error("Unauthorized to delete this product");
   }
 
@@ -170,18 +183,29 @@ module.exports.deleteProduct = asyncHandler(async (req, res) => {
 // update product
 module.exports.updateProduct = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  const { title, description, price, category, length, width, height, weight, color, material } = req.body;
-console.log(req.body);
+  const {
+    title,
+    description,
+    price,
+    category,
+    length,
+    width,
+    height,
+    weight,
+    color,
+    material,
+  } = req.body;
+  console.log(req.body);
 
   const product = await productModel.findById(id);
   if (!product) {
-    res.status(404).json({message:"Product not found"});
+    res.status(404).json({ message: "Product not found" });
     throw new Error("Product not found");
   }
 
   // Check if the product belongs to the logged-in user
   if (product.user?.toString() !== req.user.id) {
-    res.status(403).json({message: "Unauthorized to update this product"});
+    res.status(403).json({ message: "Unauthorized to update this product" });
     throw new Error("Unauthorized to update this product");
   }
 
@@ -235,15 +259,21 @@ console.log(req.body);
     {
       new: true,
       runValidators: true,
-    }  
+    }
   );
 
   if (!updateProduct) {
-    res.status(404).json({message:"Product update failed"});
+    res.status(404).json({ message: "Product update failed" });
     throw new Error("Product update failed");
   }
 
-  res.status(201).json({ success: true, message:"product update successfully", data: updateProduct });
+  res
+    .status(201)
+    .json({
+      success: true,
+      message: "product update successfully",
+      data: updateProduct,
+    });
 });
 
 // get my products by my user id
@@ -285,7 +315,6 @@ module.exports.getAllProductByAdmin = asyncHandler(async (req, res) => {
   });
   res.json({ success: true, data: products });
 });
-
 
 // delete product by admin
 module.exports.deleteProductByAdmin = asyncHandler(async (req, res) => {

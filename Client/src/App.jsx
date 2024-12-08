@@ -48,6 +48,7 @@ import { ForgotPassword } from "./pages/auth/ForgotPassword";
 import { ResetPassword } from "./pages/auth/ResetPassword";
 import { VerifyEmail } from "./pages/auth/VerifyEmail";
 
+
 axios.defaults.withCredentials = true;
 
 function App() {
@@ -59,6 +60,11 @@ function App() {
 
   const { products } = useSelector((state) => state.product);
 
+  const verifiedProducts = products.filter(product =>
+    product.isSoldout === false &&
+    product.isVerify === true
+  );
+
   useEffect(() => {
     dispatch(getAllProduct());
   }, [dispatch]);
@@ -66,9 +72,10 @@ function App() {
   return (
     <>
       <BrowserRouter>
-        <ToastContainer autoClose={1000}/>
+        <ToastContainer autoClose={1500} position="bottom-right" />
         <ScrollToTop />
         <Routes>
+          {/* Home Page  */}
           <Route
             path="/"
             element={
@@ -78,14 +85,27 @@ function App() {
             }
           />
 
+          {/* Products Page  */}
           <Route
             path="/products"
             element={
               <Layout>
-                <Products products={products} />
+                <Products products={verifiedProducts} />
               </Layout>
             }
           />
+
+          {/* Product details */}
+          <Route
+            path="/details/:id"
+            element={
+              <Layout>
+                <ProductDetails />
+              </Layout>
+            }
+          />
+
+          {/* Contact us page */}
           <Route
             path="/Contact"
             element={
@@ -94,6 +114,8 @@ function App() {
               </Layout>
             }
           />
+
+          {/* About us page */}
           <Route
             path="/About"
             element={
@@ -102,6 +124,8 @@ function App() {
               </Layout>
             }
           />
+
+          {/* How Auction Work page */}
           <Route
             path="/work"
             element={
@@ -110,6 +134,8 @@ function App() {
               </Layout>
             }
           />
+
+          {/* Login  */}
           <Route
             path="/login"
             element={
@@ -117,7 +143,9 @@ function App() {
                 <Login />
               </Layout>
             }
-          />  
+          />
+
+          {/* Become Seller  */}
           <Route
             path="/seller/login"
             element={
@@ -128,6 +156,7 @@ function App() {
               </PrivateRoute>
             }
           />
+          {/* Register  */}
           <Route
             path="/register"
             element={
@@ -137,7 +166,8 @@ function App() {
             }
           />
 
-<Route
+          {/* Verify Email */}
+          <Route
             path="/verify-email"
             element={
               <Layout>
@@ -145,6 +175,7 @@ function App() {
               </Layout>
             }
           />
+          {/* Forgot Password */}
           <Route
             path="/forgot-password"
             element={
@@ -154,6 +185,7 @@ function App() {
             }
           />
 
+          {/* Reset Password */}
           <Route
             path="/reset-password"
             element={
@@ -162,39 +194,8 @@ function App() {
               </Layout>
             }
           />
-          <Route
-            path="/add"
-            element={
-              <PrivateRoute>
-                <Layout>
-                  <DashboardLayout>
-                    <AddProduct />
-                  </DashboardLayout>
-                </Layout>
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/product/update/:id"
-            element={
-              <PrivateRoute >
-                <Layout>
-                  <DashboardLayout>
-                    <ProductEdit />
-                  </DashboardLayout>
-                </Layout>
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/details/:id"
-            element={
-              <Layout>
-                <ProductDetails />
-              </Layout>
-            }
-          />
 
+          {/* dashboard */}
           <Route
             path="/dashboard"
             element={
@@ -207,94 +208,12 @@ function App() {
               </PrivateRoute>
             }
           />
-          <Route
-            path="/product-list"
-            element={
-              <PrivateRoute>
-                <Layout>
-                  <DashboardLayout>
-                    <ProductList />
-                  </DashboardLayout>
-                </Layout>
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/product/admin"
-            element={
-              <PrivateRoute>
-                <Layout>
-                  <DashboardLayout>
-                    <AdminProductList />
-                  </DashboardLayout>
-                </Layout>
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/product/admin/update/:id"
-            element={
-              <PrivateRoute>
-                <Layout>
-                  <DashboardLayout>
-                    <UpdateProductByAdmin />
-                  </DashboardLayout>
-                </Layout>
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/userlist"
-            element={
-              <PrivateRoute>
-                <Layout>
-                  <DashboardLayout>
-                    <UserList />
-                  </DashboardLayout>
-                </Layout>
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/winning-products"
-            element={
-              <PrivateRoute>
-                <Layout>
-                  <DashboardLayout>
-                    <WinningProductList />
-                  </DashboardLayout>
-                </Layout>
-              </PrivateRoute>
-            }
-          />
-           <Route
-            path="/my-biddings"
-            element={
-              <PrivateRoute>
-                <Layout>
-                  <DashboardLayout>
-                    <PlaceBiddingList />
-                  </DashboardLayout>
-                </Layout>
-              </PrivateRoute>
-            }
-          />
-             <Route
-            path="/favorites"
-            element={
-              <PrivateRoute>
-                <Layout>
-                  <DashboardLayout>
-                    <MyFavoriteProduct />
-                  </DashboardLayout>
-                </Layout>
-              </PrivateRoute>
-            }
-          />
+
+          {/* My Profile */}
           <Route
             path="/profile"
             element={
-              <PrivateRoute>
+              <PrivateRoute roles={['admin', 'seller', 'buyer']}>
                 <Layout>
                   <DashboardLayout>
                     <UserProfile />
@@ -303,10 +222,99 @@ function App() {
               </PrivateRoute>
             }
           />
+
+          {/* Seller Routes */}
+          {/* Add Products By Seller  */}
+          <Route
+            path="/add"
+            element={
+              <PrivateRoute roles={['seller']}>
+                <Layout>
+                  <DashboardLayout>
+                    <AddProduct />
+                  </DashboardLayout>
+                </Layout>
+              </PrivateRoute>
+            }
+          />
+
+          {/* Update Product by Seller */}
+          <Route
+            path="/product/update/:id"
+            element={
+              <PrivateRoute roles={['seller']}>
+                <Layout>
+                  <DashboardLayout>
+                    <ProductEdit />
+                  </DashboardLayout>
+                </Layout>
+              </PrivateRoute>
+            }
+          />
+
+          {/* Seller Products Table */}
+          <Route
+            path="/product-list"
+            element={
+              <PrivateRoute roles={['seller']}>
+                <Layout>
+                  <DashboardLayout>
+                    <ProductList />
+                  </DashboardLayout>
+                </Layout>
+              </PrivateRoute>
+            }
+          />
+          {/* Seller Routes End */}
+
+          {/* Admin Routes */}
+          {/* Table All Seller Products on Admin Dashboard */}
+          <Route
+            path="/product/admin"
+            element={
+              <PrivateRoute roles={['admin']}>
+                <Layout>
+                  <DashboardLayout>
+                    <AdminProductList />
+                  </DashboardLayout>
+                </Layout>
+              </PrivateRoute>
+            }
+          />
+
+          {/* Verify and Add Commission in Product By Admin */}
+          <Route
+            path="/product/admin/update/:id"
+            element={
+              <PrivateRoute roles={['admin']}>
+                <Layout>
+                  <DashboardLayout>
+                    <UpdateProductByAdmin />
+                  </DashboardLayout>
+                </Layout>
+              </PrivateRoute>
+            }
+          />
+
+          {/* All Users Table on Admin Dashboard */}
+          <Route
+            path="/userlist"
+            element={
+              <PrivateRoute roles={['admin']}>
+                <Layout>
+                  <DashboardLayout>
+                    <UserList />
+                  </DashboardLayout>
+                </Layout>
+              </PrivateRoute>
+            }
+          />
+
+          {/* Category Table Admin Dashboard */}
           <Route
             path="/category"
             element={
-              <PrivateRoute>
+              <PrivateRoute roles={['admin']}>
                 <Layout>
                   <DashboardLayout>
                     <Catgeorylist />
@@ -315,10 +323,12 @@ function App() {
               </PrivateRoute>
             }
           />
+
+          {/* Create Category by Admin */}
           <Route
             path="/category/create"
             element={
-              <PrivateRoute>
+              <PrivateRoute roles={['admin']}>
                 <Layout>
                   <DashboardLayout>
                     <CreateCategory />
@@ -327,10 +337,12 @@ function App() {
               </PrivateRoute>
             }
           />
+
+          {/* Update Category by Admin */}
           <Route
             path="/category/update/:id"
             element={
-              <PrivateRoute>
+              <PrivateRoute roles={['admin']}>
                 <Layout>
                   <DashboardLayout>
                     <UpdateCategory />
@@ -339,6 +351,52 @@ function App() {
               </PrivateRoute>
             }
           />
+          {/* End Admin Routes */}
+
+
+          {/* Buyer Routes */}
+          {/* Buyer Winning Product Table */}
+          <Route
+            path="/winning-products"
+            element={
+              <PrivateRoute roles={['buyer']}>
+                <Layout>
+                  <DashboardLayout>
+                    <WinningProductList />
+                  </DashboardLayout>
+                </Layout>
+              </PrivateRoute>
+            }
+          />
+
+          {/* Buyer Biddings Table */}
+          <Route
+            path="/my-biddings"
+            element={
+              <PrivateRoute roles={['buyer']}>
+                <Layout>
+                  <DashboardLayout>
+                    <PlaceBiddingList />
+                  </DashboardLayout>
+                </Layout>
+              </PrivateRoute>
+            }
+          />
+          {/* Favorites products Buyer */}
+          <Route
+            path="/favorites"
+            element={
+              <PrivateRoute roles={['buyer']}>
+                <Layout>
+                  <DashboardLayout>
+                    <MyFavoriteProduct />
+                  </DashboardLayout>
+                </Layout>
+              </PrivateRoute>
+            }
+          />
+          {/* End Buyer Routes  */}
+
           <Route
             path="/*"
             element={
@@ -355,7 +413,7 @@ function App() {
                 <Unauthorized />
               </Layout>
             }
-          />  
+          />
         </Routes>
       </BrowserRouter>
     </>

@@ -9,7 +9,8 @@ import { useRedirectLogoutUser } from "../../hooks/useRedirectLogoutUser";
 import Loader from "../common/Loader";
 
 const DashboardLayout = ({ children }) => {
-  const isChecking = useRedirectLogoutUser("/login");
+  
+  // const isChecking = useRedirectLogoutUser("/login");
 
   const location = useLocation();
   const dispatch = useDispatch();
@@ -27,9 +28,9 @@ const DashboardLayout = ({ children }) => {
   };
 
   
-  if (isChecking) {
-    return <Loader />;
-  }
+  // if (isChecking) {
+  //   return <Loader />;
+  // }
 
 
   return (

@@ -179,6 +179,7 @@ module.exports.logout = asyncHandler(async (req, res) => {
 });
 
 // seller profile login
+
 module.exports.sellerLogin = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) {

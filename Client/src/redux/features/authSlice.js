@@ -4,9 +4,9 @@ import { toast } from "react-toastify";
 
 // Initial state
 const initialState = {
-  user: JSON.parse(localStorage.getItem("user")) || null,
+  user: JSON.parse(localStorage.getItem("auth")) || null,
   users: [],
-  isLoggedIn: !!localStorage.getItem("user"),
+  isLoggedIn: !!localStorage.getItem("auth"),
   isError: false,
   errorType: null,
   userIncome: null,
@@ -265,7 +265,7 @@ const authSlice = createSlice({
         state.isLoggedIn = true;
         state.user = action.payload;
         toast.success(action.payload);
-        localStorage.setItem("user", JSON.stringify(action.payload));
+        localStorage.setItem("auth", JSON.stringify(action.payload.user));
       })
       .addCase(verifyEmail.rejected, (state, action) => {
         state.isLoading = false;
@@ -281,7 +281,7 @@ const authSlice = createSlice({
         state.isSuccess = true;
         state.isLoggedIn = true;
         state.user = action.payload;
-        localStorage.setItem("user", JSON.stringify(action.payload));
+        localStorage.setItem("auth", JSON.stringify(action.payload.user));
       })
       .addCase(login.rejected, (state, action) => {
         state.isLoading = false;
@@ -298,7 +298,7 @@ const authSlice = createSlice({
         state.isSuccess = true;
         state.isLoggedIn = true;
         state.user = action.payload;
-        localStorage.setItem("user", JSON.stringify(action.payload));
+        localStorage.setItem("auth", JSON.stringify(action.payload.user));
         toast.success("You Become Seller");
       })
       .addCase(loginUserAsSeller.rejected, (state, action) => {
@@ -316,7 +316,7 @@ const authSlice = createSlice({
         state.isSuccess = true;
         state.isLoggedIn = false;
         state.user = null;
-        localStorage.removeItem("user");
+        localStorage.removeItem("auth");
         state.isError = false;
         state.message = "";
         toast.success("Logout Successfully");
@@ -339,7 +339,7 @@ const authSlice = createSlice({
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
-        localStorage.removeItem("user");
+        localStorage.removeItem("auth");
       })
       .addCase(getUserProfile.pending, (state) => {
         state.isLoading = true;
@@ -353,7 +353,7 @@ const authSlice = createSlice({
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
-        localStorage.removeItem("user");
+        localStorage.removeItem("auth");
       })
       .addCase(getUserIncome.pending, (state) => {
         state.isLoading = true;
@@ -420,7 +420,7 @@ const authSlice = createSlice({
         state.isSuccess = true;
         state.isError = false;
         state.isLoggedIn = true;
-        localStorage.setItem("user", JSON.stringify(action.payload));
+        localStorage.setItem("auth", JSON.stringify(action.payload));
         state.user = action.payload;
         toast.success("Password Reset Successfully");
       })

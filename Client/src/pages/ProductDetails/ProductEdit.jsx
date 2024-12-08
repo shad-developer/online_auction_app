@@ -35,7 +35,7 @@ export const ProductEdit = () => {
     color: "",
   };
 
-  const [formData, setFormData] = useState(initialState);
+  const [formData, setFormData] = useState("");
   const [productImage, setProductImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
 
@@ -58,7 +58,7 @@ export const ProductEdit = () => {
         color: product.color,
         material: product.material,
       });
-      setImagePreview(product.image.filePath);
+      setImagePreview(product.image?.filePath);
     }
   }, [product]);
 
@@ -72,7 +72,7 @@ export const ProductEdit = () => {
     setProductImage(file);
     setImagePreview(URL.createObjectURL(file));
   };
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -220,7 +220,9 @@ export const ProductEdit = () => {
             name="description"
             value={formData.description}
             className="h-48"
-            onChange={(value) => setFormData({ ...formData, description: value })}
+            onChange={(value) =>
+              setFormData({ ...formData, description: value })
+            }
           />
         </div>
 
@@ -241,7 +243,7 @@ export const ProductEdit = () => {
             <img
               src={imagePreview}
               alt="Product Preview"
-              className="w-1/2 h-auto"
+              className="w-20 h-20"
             />
           </div>
         )}

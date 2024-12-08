@@ -21,18 +21,15 @@ module.exports.getAllBiddingHistories = asyncHandler(async (req, res) => {
   res.json({ success: true, data: histories });
 });
 
-
-
 // place bid
 module.exports.placeBid = asyncHandler(async (req, res) => {
   const { productId, price } = req.body;
   const userId = req.user._id;
-
   const product = await productModel
     .findById(productId)
     .populate("user", "name email");
 
-  if (product?.user?.toString() === userId?.toString()) {
+  if (product?.user._id.toString() === userId.toString()) {
     return res
       .status(403)
       .json({ message: "You cannot place a bid on your own product" });
@@ -192,7 +189,7 @@ module.exports.sellProduct = asyncHandler(async (req, res) => {
     <div style="padding: 20px;">
       <p>Hello,</p>
       <p>You have won the bid for the product. Your final price is:</p>
-      <h2 style="font-size: 24px; color: #4CAF50; text-align: center;"><b>$${finalPrice.toFixed(
+      <h2 style="font-size: 24px; color: #4CAF50; text-align: center;"><b>$${highestBid.price.toFixed(
         2
       )}</b></h2>
       <p>Thank you for participating!</p>

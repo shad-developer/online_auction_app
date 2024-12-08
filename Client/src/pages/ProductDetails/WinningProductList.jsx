@@ -77,7 +77,7 @@ export const WinningProductList = () => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="5" className="text-center py-4">No bids available</td>
+                  <td colSpan="5" className="text-center py-4">No Winned Found</td>
                 </tr>
               )}
             </tbody>
